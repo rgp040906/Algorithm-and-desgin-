@@ -1,0 +1,1066 @@
+Single File Programming Question
+Problem Statement
+
+
+
+Emma is designing a task scheduling system that prioritizes tasks using a Min Heap. The system must:
+
+
+
+Build a Min Heap based on user-provided task priorities.
+Calculate twice the priority of the root task.
+Remove all tasks with priorities less than twice the root task’s priority.
+Display the remaining tasks while ensuring the Min Heap property is preserved (Level order traversal).
+Input format :
+The first line contains an integer n, representing the number of tasks prioritized in the Min Heap.
+
+The second line contains n space-separated integers, representing the priority levels of the tasks to be added to the Min Heap.
+
+Output format :
+The output is a single line containing the remaining task priorities in the Min Heap after removing tasks with priorities less than twice the root task’s priority, separated by a space.
+
+
+
+Refer to the sample output for the formatting specifications.
+
+Code constraints :
+1 ≤ n ≤ 20
+
+1 ≤ priority values ≤ 1000
+
+Sample test cases :
+Input 1 :
+7
+4 8 6 15 12 10 14
+Output 1 :
+8 10 12 15 14 
+Input 2 :
+4
+2 4 3 6
+Output 2 :
+4 6 
+code
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+void heapify(vector<int>& heap, int n, int i) {
+    int smallest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && heap[left] < heap[smallest]) smallest = left;
+    if (right < n && heap[right] < heap[smallest]) smallest = right;
+
+    if (smallest != i) {
+        swap(heap[i], heap[smallest]);
+        heapify(heap, n, smallest);
+    }
+}
+
+void buildMinHeap(vector<int>& heap) {
+    int n = heap.size();
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(heap, n, i);
+    }
+}
+
+void processTasks(vector<int>& tasks) {
+    buildMinHeap(tasks);
+    int twiceRoot = 2 * tasks[0];
+
+    vector<int> remaining;
+    for (int val : tasks) {
+        if (val >= twiceRoot) remaining.push_back(val);
+    }
+
+    buildMinHeap(remaining);
+
+    for (int val : remaining) cout << val << " ";
+    cout << endl;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    vector<int> tasks(n);
+    for (int i = 0; i < n; i++) cin >> tasks[i];
+    processTasks(tasks);
+    return 0;
+}
+
+
+
+Problem Statement
+
+
+
+In a warehouse inventory system, a supervisor must manage the weights of parcels arriving at the facility. Each parcel weight is a positive integer. To efficiently prioritize lighter parcels, the supervisor uses a Min Heap to store the weights. Additionally, the supervisor must calculate the average weight of all parcels and display it with two decimal precision.
+
+
+
+Write a program to assist the supervisor with the following tasks:
+
+Accept an integer n, representing the total number of parcels.
+For each parcel, process its weight. If the weight is a positive integer, add it to the Min Heap and update the total weight sum.
+Display the contents of the Min Heap after all valid weights have been added.
+Calculate and display the average weight of the parcels, formatted to two decimal places. If no valid weights are provided, output "No valid weight".
+Input format :
+The first line contains an integer n, representing the number of parcels.
+
+The second line contains n space-separated integers, representing the weights of the parcels.
+
+Output format :
+The first line prints the elements of the Min Heap, separated by spaces.
+
+The second line displays the average weight of the parcels as a double value, formatted to two decimal places.
+
+If no valid weights are provided, output "No valid weight".
+
+
+
+Refer to the sample output for the formatting specifications.
+
+Code constraints :
+1 ≤ n ≤ 10
+
+1 ≤ parcel weights ≤ 50
+
+Sample test cases :
+Input 1 :
+5
+3 9 2 6 8
+Output 1 :
+2 6 3 9 8 
+5.60
+Input 2 :
+6
+25 15 17 -32 -23 5
+Output 2 :
+5 15 17 25 
+15.50
+Input 3 :
+4
+-2 -3 -4 -5
+Output 3 :
+No valid weight
+code
+#include <iostream>
+#include <vector>
+#include <iomanip>
+using namespace std;
+
+void heapify(vector<int>& heap, int n, int i) {
+    int smallest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && heap[left] < heap[smallest]) smallest = left;
+    if (right < n && heap[right] < heap[smallest]) smallest = right;
+
+    if (smallest != i) {
+        swap(heap[i], heap[smallest]);
+        heapify(heap, n, smallest);
+    }
+}
+
+void buildMinHeap(vector<int>& heap) {
+    int n = heap.size();
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(heap, n, i);
+    }
+}
+
+void processParcels(vector<int>& parcels) {
+    if (parcels.empty()) {
+        cout << "No valid weight" << endl;
+        return;
+    }
+
+    buildMinHeap(parcels);
+
+    for (int w : parcels) cout << w << " ";
+    cout << endl;
+
+    double sum = 0;
+    for (int w : parcels) sum += w;
+    double avg = sum / parcels.size();
+
+    cout << fixed << setprecision(2) << avg << endl;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    vector<int> parcels;
+    for (int i = 0; i < n; i++) {
+        int w;
+        cin >> w;
+        if (w > 0) parcels.push_back(w);
+    }
+    processParcels(parcels);
+    return 0;
+}
+
+
+Problem Statement
+
+
+
+Olivia is working on a project where she needs to manage a list of unique employee IDs assigned to her team members. She decided to implement a Max Heap data structure to manage and retrieve these IDs based on their values efficiently.
+
+
+
+This allows her to quickly access the employee with the highest ID. After inserting all IDs from 1 to a given maximum value, she wants to display the IDs in the heap structure and calculate the total sum of all IDs stored in the heap.
+
+
+
+Help Olivia write a program to achieve this functionality.
+
+Input format :
+The input consists of a single integer n, which represents the maximum ID that will be inserted into the Max Heap.
+
+Output format :
+The first output displays the elements in the Max Heap in a single line, separated by spaces: <heap_elements>
+
+where <heap_elements> are the IDs in the Max Heap displayed in heap order.
+
+
+
+Then, the second output is the total sum of all IDs in the Max Heap: <total_sum>
+
+
+
+Refer to the sample output for the formatting specifications.
+
+Code constraints :
+The given test cases fall under the following constraints:
+
+1 ≤ n ≤ 10
+
+Sample test cases :
+Input 1 :
+3
+Output 1 :
+3 1 2 
+6
+Input 2 :
+5
+Output 2 :
+5 4 2 1 3 
+15
+code
+#include <bits/stdc++.h>
+using namespace std;
+
+void siftUp(vector<int>& heap, int i) {
+    while (i > 0) {
+        int parent = (i - 1) / 2;
+        if (heap[parent] < heap[i]) {
+            swap(heap[parent], heap[i]);
+            i = parent;
+        } else break;
+    }
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    vector<int> heap;
+    for (int i = 1; i <= n; i++) {
+        heap.push_back(i); 
+        siftUp(heap, heap.size() - 1); 
+    }
+    for (int x : heap) {
+        cout << x << " ";
+    }
+    cout << endl;
+    int sum = accumulate(heap.begin(), heap.end(), 0);
+    cout << sum << endl;
+
+    return 0;
+}
+
+
+Single File Programming Question
+Problem Statement
+
+
+
+A treasure hunter is organizing precious gems in a sequence inspired by the Fibonacci pattern. The size of the first gem is 2 carats, the second gem is 3 carats, and each subsequent gem's size is the sum of the sizes of the two previous gems. To ensure the most valuable gem is always accessible, the hunter uses a Max Heap, where the largest gem size is always at the top.
+
+
+
+Write a program that, given an integer n (number of gems), computes the size of each gem in the sequence, inserts it into the Max Heap, and displays the Max Heap arrangement after each insertion.
+
+Input format :
+The input consists of a single integer n, representing the number of gems.
+
+Output format :
+For each gem inserted, display a line in the format:
+
+Insert <gem_size>: <current_heap>
+
+Here, <gem_size> is the size of the gem being inserted, and <current_heap> is the list of gem sizes in Max Heap order after the insertion.
+
+
+
+Refer to the sample output for the formatting specifications.
+
+Code constraints :
+The given test cases fall under the following constraints:
+
+1 ≤ n ≤ 10
+
+Sample test cases :
+Input 1 :
+5
+Output 1 :
+Insert 2: 2 
+Insert 3: 3 2 
+Insert 5: 5 2 3 
+Insert 8: 8 5 3 2 
+Insert 13: 13 8 3 2 5 
+Input 2 :
+3
+Output 2 :
+Insert 2: 2 
+Insert 3: 3 2 
+Insert 5: 5 2 3 
+Input 3 :
+1
+Output 3 :
+Insert 2: 2 
+code
+// You are using GCC
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+
+    if (n <= 0) return 0;
+
+    vector<int> gems;
+    int a = 2, b = 3; 
+
+    for (int i = 1; i <= n; i++) {
+        int gem;
+        if (i == 1) gem = a;
+        else if (i == 2) gem = b;
+        else {
+            gem = a + b;
+            a = b;
+            b = gem;
+        }
+
+        gems.push_back(gem);
+        push_heap(gems.begin(), gems.end()); 
+
+        cout << "Insert " << gem << ": ";
+        for (int x : gems) cout << x << " ";
+        cout << endl;
+    }
+
+    return 0;
+}
+
+
+
+Problem Statement
+
+
+
+Amit, an e-commerce manager, is working on an inventory management system to track the top-selling products. Given the sales data of various products, he wants to quickly determine the Kth best-selling product to make informed restocking decisions.
+
+
+
+Help Amit implement Heap Sort to efficiently find the Kth best-selling product from the given sales data.
+
+Input format :
+The first line of input consists of an integer n, representing the number of products.
+
+The second line consists of n space-separated integers, representing the sales data of each product.
+
+The third line contains an integer K, representing the rank of the product to retrieve.
+
+Output format :
+The output prints the Kth best-selling product based on the given sales data.
+
+
+
+Refer to the sample output for formatting specifications.
+
+Code constraints :
+The given test cases fall under the following specifications:
+
+1 ≤ n ≤ 105
+
+1 ≤ sales data of each product ≤ 109
+
+1 ≤ K ≤ n
+
+Sample test cases :
+Input 1 :
+5
+10 20 15 5 25
+2
+Output 1 :
+20
+Input 2 :
+8
+50 30 40 20 10 25 15 35
+4
+Output 2 :
+30
+code
+// You are using GCC
+#include <bits/stdc++.h>
+using namespace std;
+void heapify(vector<int>& arr, int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+int kthBestSelling(vector<int>& arr, int n, int K) {
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(arr, n, i);
+    }
+
+    int size = n;
+    int kthElement = -1;
+    for (int i = 0; i < K; i++) {
+        kthElement = arr[0];
+        swap(arr[0], arr[size - 1]);
+        size--;
+        heapify(arr, size, 0);
+    }
+
+    return kthElement;
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    vector<int> sales(n);
+    for (int i = 0; i < n; i++) {
+        cin >> sales[i];
+    }
+
+    int K;
+    cin >> K;
+
+    cout << kthBestSelling(sales, n, K) << endl;
+
+    return 0;
+}
+
+
+Single File Programming Question
+Problem Statement
+
+
+
+Neha, a computer scientist, is working on efficient text processing for search engines. She has a list of words in random order and needs to sort them in lexicographic order using Heap Sort to improve search performance.
+
+
+
+Help Neha implement Heap Sort to arrange the words in lexicographic order efficiently.
+
+Input format :
+The first line consists of an integer N denoting the number of strings.
+
+The next line consists of N﻿ space-separated strings.
+
+Output format :
+The output displays N space-separated sorted strings in lexicographic order.
+
+
+
+Refer to the sample output for the formatting specifications.
+
+Code constraints :
+The given test cases fall under the following specifications:
+
+1 ≤ N ≤ 20
+
+All strings contain only lowercase and uppercase English letters.
+
+Sample test cases :
+Input 1 :
+10
+banana pineapple mango chikoo jack star guava lemon tomato orange
+Output 1 :
+banana chikoo guava jack lemon mango orange pineapple star tomato 
+Input 2 :
+6
+kiwi grape fig Date apple Banana
+Output 2 :
+Banana Date apple fig grape ki
+code
+#include <bits/stdc++.h>
+using namespace std;
+
+void heapify(vector<string>& arr, int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+
+    if (largest != i) {
+        swap(arr[i], arr[largest]);
+        heapify(arr, n, largest);
+    }
+}
+void heapSort(vector<string>& arr, int n) {
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(arr, n, i);
+    }
+    for (int i = n - 1; i >= 0; i--) {
+        swap(arr[0], arr[i]);
+        heapify(arr, i, 0);
+    }
+}
+
+int main() {
+    int N;
+    cin >> N;
+    cin.ignore();
+
+    vector<string> arr(N);
+    for (int i = 0; i < N; i++) {
+        cin >> arr[i];
+    }
+    heapSort(arr, N);
+    for (string s : arr) {
+        cout << s << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
+
+
+Problem Statement
+
+
+
+You are working with a charity organization that receives a stream of donations from different donors. Your task is to develop a program that finds the Kth largest donation amount received so far. To achieve this, you decide to implement the heap sort approach.
+
+
+
+Write a program that takes the number of donations, the donation amounts, and an integer K as inputs. The program should use the max-heap sort approach to find and output the Kth largest donation amount from the array of donations.
+
+Input format :
+The first line of input consists of an integer n, representing the number of donations.
+
+The second line consists of n space-separated integers, representing the donation amounts, each donation amount is a positive integer.
+
+The third line consists of integer K, representing the Kth largest donation amount to find.
+
+Output format :
+If the value of K is invalid (K > n or K <= 0), output "Invalid K value."
+
+Otherwise, output a single line containing the Kth largest donation amount.
+
+
+
+Refer to the sample output for the exact format.
+
+Code constraints :
+The given test cases fall under the following constraints:
+
+1 ≤ n ≤ 100
+
+1 ≤ donation amount ≤ 10,000
+
+1 ≤ K ≤ n
+
+Sample test cases :
+Input 1 :
+5
+50 30 70 10 90
+5
+Output 1 :
+The 5th largest donation amount is: 10
+Input 2 :
+7
+15 25 10 40 30 20 5
+4
+Output 2 :
+The 4th largest donation amount is: 20
+Input 3 :
+6
+15 25 10 40 30 20 
+7
+Output 3 :
+Invalid K value.
+code
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int findKthLargest(vector<int>& arr, int k) {
+    int n = arr.size();
+    if (k <= 0 || k > n) return -1; // invalid K
+
+    sort(arr.begin(), arr.end(), greater<int>()); // sort descending
+    return arr[k - 1]; // K-th largest (1-based index)
+}
+
+int main() {
+    int n, k;
+    cin >> n;
+    vector<int> arr(n);
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    cin >> k;
+
+    int result = findKthLargest(arr, k);
+
+    if (result == -1) {
+        cout << "Invalid K value." << endl;
+    } else {
+        cout << "The " << k << "th largest donation amount is: " << result << endl;
+    }
+
+    return 0;
+}
+
+
+
+Anjali is working on a system that organizes customer orders based on their priority levels using a Min-Heap. Each order has a priority value, and Anjali wants to know how many orders have a priority lower than a specific threshold. She is given an array of customer orders, and her task is to create a Min-Heap from this array and then count how many orders have a priority value less than the given threshold.
+
+
+
+Help Anjali by implementing this system.
+
+Input format :
+The first line contains an integer n, representing the number of customer orders.
+
+The second line contains n space-separated integers representing the priority values of the orders.
+
+The third line contains an integer threshold, which is the value used to count how many orders have a lower priority than this value.
+
+Output format :
+The first line should display the elements of the Min-Heap in ascending order.
+
+The second line should display the count of elements in the Min-Heap that have a priority lower than the specified threshold.
+
+
+
+Refer to the sample output for the formatting specifications.
+
+Code constraints :
+The given test cases fall under the following constraints:
+
+1 ≤ n ≤ 10
+
+1 ≤ arr[i] ≤ 100
+
+1 ≤ threshold ≤ 100
+
+Sample test cases :
+Input 1 :
+5
+4 3 1 2 7
+3
+Output 1 :
+1 2 4 3 7 
+2
+Input 2 :
+7
+20 15 12 25 10 5 30
+18
+Output 2 :
+5 10 12 25 15 20 30 
+4
+Input 3 :
+8
+1 3 5 7 9 11 13 15
+5
+Output 3 :
+1 3 5 7 9 11 13 15 
+2
+code
+#include <bits/stdc++.h>
+using namespace std;
+
+void heapify(vector<int>& heap, int n, int i) {
+    int smallest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+    if (left < n && heap[left] < heap[smallest]) smallest = left;
+    if (right < n && heap[right] < heap[smallest]) smallest = right;
+    if (smallest != i) {
+        swap(heap[i], heap[smallest]);
+        heapify(heap, n, smallest);
+    }
+}
+
+void buildMinHeap(vector<int>& heap) {
+    int n = heap.size();
+    for (int i = n / 2 - 1; i >= 0; i--) heapify(heap, n, i);
+}
+
+int main() {
+    int n, threshold;
+    cin >> n;
+    vector<int> m(n);
+    for (int i = 0; i < n; i++) cin >> m[i];
+    cin >> threshold;
+
+    buildMinHeap(m);
+
+    for (int val : m) cout << val << " ";
+    cout << endl;
+
+    int count = 0;
+    for (int val : m) if (val < threshold) count++;
+    cout << count << endl;
+
+    return 0;
+}
+
+
+Problem Statement
+
+
+
+A warehouse manager is responsible for managing shipments that arrive with unique tracking numbers. To streamline the processing, the manager wants to identify the Kth largest tracking number efficiently.
+
+
+
+Implement a program that takes a list of tracking numbers as input and finds the Kth largest tracking number using the heap sort algorithm.
+
+Input format :
+The first line contains an integer N, representing the number of tracking numbers.
+
+The second line contains N space-separated integers, each representing a tracking number.
+
+The third line contains an integer K, representing the desired position of the Kth largest tracking number.
+
+Output format :
+If K is invalid (greater than N or less than or equal to 0), print "Invalid K value."
+
+Otherwise, print a single line containing the Kth largest tracking number.
+
+
+
+Refer to the sample output for the exact format.
+
+Code constraints :
+The given test cases fall under the following constraints:
+
+The number of tracking numbers(N) is at most 105.
+
+tracking numbers are positive integers, each having at most 9 digits.
+
+The value of K (1 ≤ K ≤ N) represents the position of the desired largest tracking numbers.
+
+Sample test cases :
+Input 1 :
+5
+1234 5678 9012 3456 7890
+4
+Output 1 :
+The 4th largest ISBN number is: 3456
+Input 2 :
+9
+1111 2222 3333 4444 5555 6666 7777 8888 9999
+10
+Output 2 :
+Invalid K value.
+Note :
+code
+// You are using GCC
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int findKthLargest(vector<int>& arr, int k) {
+    int n = arr.size();
+    if (k <= 0 || k > n) return -1; 
+
+    sort(arr.begin(), arr.end(), greater<int>());
+    return arr[k - 1]; 
+}
+int main() {
+    int n, k;
+    cin >> n;
+    vector<int> arr(n);
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    cin >> k;
+
+    int result = findKthLargest(arr, k);
+
+    if (result == -1) {
+        cout << "Invalid K value." << endl;
+    } else {
+        cout << "The " << k << "th largest ISBN number is: " << result << endl;
+    }
+
+    return 0;
+}
+
+
+Problem Statement
+
+
+
+Noah is designing a system to manage and analyze a Min Heap of numerical data. The system allows users to input a set of integers, which are added to the Min Heap.
+
+
+
+After all values have been inserted, the program will:
+
+Display the elements of the Min Heap.
+Calculate and display the cubes of each element in the Min Heap.
+Input format :
+The first line contains an integer n, representing the number of integers to insert into the Min Heap.
+
+The second line contains n space-separated integers, representing the values to be inserted.
+
+Output format :
+The first line displays the elements of the Min Heap in the order they appear.
+
+The second line displays the cubes of these elements, separated by spaces.
+
+
+
+Refer to the sample output for the formatting specifications.
+
+Code constraints :
+1 ≤ n ≤ 10
+
+1 ≤ values ≤ 50
+
+Sample test cases :
+Input 1 :
+5
+3 9 2 6 8
+Output 1 :
+2 6 3 9 8 
+8 216 27 729 512 
+Input 2 :
+8
+25 15 17 32 23 5 12 8
+Output 2 :
+5 8 12 23 25 17 15 32 
+125 512 1728 12167 15625 4913 33
+code
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Insert a new element into the Min Heap
+void insert(vector<int>& heap, int val) {
+    heap.push_back(val);
+    int i = heap.size() - 1;
+    while (i > 0) {
+        int parent = (i - 1) / 2;
+        if (heap[parent] <= heap[i]) break;
+        swap(heap[parent], heap[i]);
+        i = parent;
+    }
+}
+
+int main() {
+    int n;
+    cin >> n;
+    vector<int> heap;
+    for (int i = 0; i < n; i++) {
+        int val;
+        cin >> val;
+        insert(heap, val);
+    }
+
+    for (int val : heap) cout << val << " ";
+    cout << endl;
+
+    for (int val : heap) cout << val*val*val << " ";
+    cout << endl;
+
+    return 0;
+}
+
+Problem Statement
+
+
+
+Riya, an HR manager, needs a quick way to identify the Kth highest salary among employees for bonus distribution. To efficiently retrieve this information, she wants to use the max-heap technique.
+
+
+
+Help Riya implement a solution that finds the Kth highest salary from the given list of salaries.
+
+Input format :
+The first line of input consists of an integer N, representing the number of employees.
+
+The second line consists of N space-separated integers, representing the salaries of N employees.
+
+The third line consists of an integer K, indicating the rank of the desired Kth highest salary.
+
+Output format :
+The output prints a single integer, representing the Kth highest salary among the employees.
+
+
+
+Refer to the sample output for the exact format.
+
+Code constraints :
+The given test cases fall under the following specifications:
+
+1 ≤ N ≤ 102
+
+103 ≤ Salary ≤ 106
+
+1 ≤ K ≤ N
+
+Sample test cases :
+Input 1 :
+7
+30000 25000 40000 35000 20000 28000 29500
+5
+Output 1 :
+5th largest Salary: 28000
+Input 2 :
+4
+8000 9000 7000 6000
+4
+Output 2 :
+4th largest Salary: 6000
+code
+// You are using GCC
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int findKthLargest(vector<int>& arr, int k) {
+    int n = arr.size();
+    if (k <= 0 || k > n) return -1; // invalid K
+
+    sort(arr.begin(), arr.end(), greater<int>()); // sort descending
+    return arr[k - 1]; // K-th largest (1-based index)
+}
+
+int main() {
+    int n, k;
+    cin >> n;
+    vector<int> arr(n);
+    for (int i = 0; i < n; i++) cin >> arr[i];
+    cin >> k;
+
+    int result = findKthLargest(arr, k);
+
+    if (result == -1) {
+        cout << "Invalid K value." << endl;
+    } else {
+        cout  << k << "th largest salary: " << result << endl;
+    }
+
+    return 0;
+}
+
+
+Problem Statement
+
+
+
+Sophia is a mathematics enthusiast who loves working with perfect squares. She is experimenting with heaps to organize perfect squares as they are generated dynamically. Sophia wants to create a max-heap to ensure the largest perfect square is always at the root. For every perfect square generated, she wants to see how the max-heap evolves after inserting the square.
+
+
+
+Write a program to help Sophia:
+
+Generate the first k perfect squares.
+Insert each perfect square into a max-heap dynamically.
+Display the max-heap after every insertion.
+Input format :
+The input consists of a single integer k, representing the number of perfect squares to generate and insert into the heap.
+
+Output format :
+For each perfect square inserted, output the following on a separate line:
+
+Heap after inserting <perfect_square>: <heap_elements>
+
+Where <perfect_square> is the value of the inserted perfect square, and <heap_elements> is the current state of the heap in array form, separated by spaces.
+
+
+
+Refer to the sample output for the formatting specifications.
+
+Code constraints :
+The given test cases will fall under the following constraints:
+
+1 ≤ k ≤ 10
+
+Sample test cases :
+Input 1 :
+3
+Output 1 :
+Heap after inserting 1: 1 
+Heap after inserting 4: 4 1 
+Heap after inserting 9: 9 1 4 
+Input 2 :
+5
+Output 2 :
+Heap after inserting 1: 1 
+Heap after inserting 4: 4 1 
+Heap after inserting 9: 9 1 4 
+Heap after inserting 16: 16 9 4 1 
+Heap after inserting 25: 25 16 
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Insert a value into the max-heap
+void insertMaxHeap(vector<int>& heap, int val) {
+    heap.push_back(val);
+    int i = heap.size() - 1;
+    while (i > 0) {
+        int parent = (i - 1) / 2;
+        if (heap[parent] >= heap[i]) break;
+        swap(heap[parent], heap[i]);
+        i = parent;
+    }
+}
+
+int main() {
+    int k;
+    cin >> k;
+    vector<int> heap;
+
+    for (int i = 1; i <= k; i++) {
+        int square = i * i;
+        insertMaxHeap(heap, square);
+
+        cout << "Heap after inserting " << square << ": ";
+        for (int val : heap) cout << val << " ";
+        cout << endl;
+    }
+
+    return 0;
+}
+
