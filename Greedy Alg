@@ -237,4 +237,129 @@ int main(){
 }
 
 
+Problem Statement
+
+
+
+You are given a knapsack with a maximum weight capacity of W and n objects. Each object i has a weight c[i] and a value v[i]. Your task is to fill the knapsack with objects in such a way that the total value of the objects in the knapsack is maximized without exceeding the weight capacity.
+
+
+
+Implement a program to solve this problem using a simple greedy algorithm known as the Fractional Knapsack Problem.
+
+Input format :
+The first line of input consists of an integer n, representing the number of objects.
+
+The second line of input consists of n integers, separated by a space, representing the weight of the object.
+
+The third line of input consists of n integers, separated by a space, representing the value of the object.
+
+The fourth line of input consists of an integer W, representing the maximum weight capacity of the knapsack.
+
+Output format :
+The output displays the following format:
+
+
+
+For each step, it should print either:
+
+
+
+"Added object X (Rs. Y, ZKg) completely in the bag. Space left: W." if the entire object X is added to the knapsack, where X is the object number, Rs. Y is the value of the object, ZKg is the weight of the object, and W is the remaining capacity of the knapsack as the integers.
+
+
+
+"Added P% (Rs. Y, ZKg) of object X in the bag." if only a fraction of object X is added to the knapsack, where P% is the percentage of the object added, Rs. Y is the value of the object, ZKg is the weight of the object, and X is the object number as the integers.
+
+
+
+Finally, it should print "Filled the bag with objects worth Rs. V." where Rs. V is the total value of the objects in the knapsack as the float-point numbers.
+
+
+
+Refer to the sample output for the formatting specifications.
+
+Code constraints :
+1 ≤ n ≤ 10
+
+1 ≤ c[i], v[i] ≤ 150
+
+1 ≤ W ≤ 100
+
+Sample test cases :
+Input 1 :
+3
+10 20 30
+60 100 120
+50
+Output 1 :
+Added object 1 (Rs. 60, 10Kg) completely in the bag. Space left: 40.
+Added object 2 (Rs. 100, 20Kg) completely in the bag. Space left: 20.
+Added 66% (Rs.120, 30Kg) of object 3 in the bag.
+Filled the bag with object
+code:
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iomanip>
+using namespace std;
+
+struct Item {
+    int index;
+    int value;
+    int weight;
+    double ratio;
+};
+
+bool cmp(const Item &a, const Item &b) {
+    return a.ratio > b.ratio;
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    vector<int> weights(n), values(n);
+    for (int i = 0; i < n; i++) cin >> weights[i];
+    for (int i = 0; i < n; i++) cin >> values[i];
+
+    int W;
+    cin >> W;
+
+    vector<Item> items;
+    for (int i = 0; i < n; i++) {
+        items.push_back({i + 1, values[i], weights[i], (double)values[i] / weights[i]});
+    }
+
+    sort(items.begin(), items.end(), cmp);
+
+    double totalValue = 0.0;
+    int remainingCapacity = W;
+
+    for (auto item : items) {
+        if (remainingCapacity >= item.weight) {
+            remainingCapacity -= item.weight;
+            totalValue += item.value;
+            cout << "Added object " << item.index << " (Rs. " << item.value << ", " 
+                 << item.weight << "Kg) completely in the bag. Space left: " 
+                 << remainingCapacity << "." << endl;
+        } else if (remainingCapacity > 0) {
+            double fraction = (double)remainingCapacity / item.weight;
+            int percentage = fraction * 100;
+            double addedValue = item.value * fraction;  // Only fraction value
+            cout << "Added " << percentage << "% (Rs." << item.value << ", " 
+                 << item.weight << "Kg) of object " << item.index << " in the bag." 
+                 << endl;
+            totalValue += addedValue;
+            remainingCapacity = 0;
+            break;
+        }
+    }
+
+    cout << fixed << setprecision(2);
+    cout << "Filled the bag with objects worth Rs. " << totalValue << "." << endl;
+
+    return 0;
+}
+
 
