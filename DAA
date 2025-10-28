@@ -313,3 +313,43 @@ int main(){
     cout<<kthLargest(a,n,k);
 }
 [10/28/2025 9:35 AM] ʀ ɢ ᴘʀᴀꜱᴀɴɴᴀ: k sort
+
+
+// You are using GCC
+#include <bits/stdc++.h>
+using namespace std;
+
+// Function to compute LPS (Longest Prefix Suffix) array for KMP
+vector<int> computeLPS(string str) {
+    int n = str.size();
+    vector<int> lps(n, 0);
+    int len = 0; // length of the previous longest prefix suffix
+    for (int i = 1; i < n; i++) {
+        while (len > 0 && str[i] != str[len])
+            len = lps[len - 1];
+        if (str[i] == str[len])
+            len++;
+        lps[i] = len;
+    }
+    return lps;
+}
+
+string shortestPalindrome(string s) {
+    string rev_s = s;
+    reverse(rev_s.begin(), rev_s.end());
+    string combined = s + "#" + rev_s;
+
+    vector<int> lps = computeLPS(combined);
+    int longestPrefix = lps.back();
+
+    string toAdd = rev_s.substr(0, s.size() - longestPrefix);
+    return toAdd + s;
+}
+
+int main() {
+    string s;
+    cin >> s;
+    cout << shortestPalindrome(s);
+    return 0;
+}
+kmp palidrome
